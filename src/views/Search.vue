@@ -86,8 +86,10 @@ export default {
   components: { AutoComplete },
   setup () {
     const searchTourName = 'search'
+    const searchStateTourName = 'searchState'
     const searchInputRef = ref(null)
     const filterButtonRef = ref(null)
+    const searchStateIndex = localStorage.getItem(searchStateTourName + '-tour') ? Number(localStorage.getItem(searchStateTourName + '-tour')) : 0;
     // Создаем ссылку, по которой можно работать с элементом-оберткой
     // области бесконечной догрузки (карточек книг)
     const state = reactive({
@@ -121,7 +123,7 @@ export default {
       activeFilterBarItems: ['1', '2'],
       tourData: {
         steps: [],
-        index: localStorage.getItem(searchTourName + '-tour') ? -1 : 0,
+        index: localStorage.getItem(searchTourName + '-tour') ? -1 : searchStateIndex,
         localStorageKey: searchTourName + '-tour'
       }
     })
@@ -319,6 +321,12 @@ export default {
     }
     function tourUpdate(index) {
       state.tourData.index = index
+      if(index === -1){
+        localStorage.removeItem(searchStateTourName + '-tour')
+      }else{
+        localStorage.setItem(searchStateTourName + '-tour',index)
+      }
+      
     }
     return {
       state, // state
